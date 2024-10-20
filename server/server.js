@@ -11,7 +11,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 
-// import userRoutes from './routes/userRoutes';
+import userRoutes from './routes/userRoutes';
 // import musicRoutes from './routes/musicRoutes';
 // import lyricsRoutes from './routes/lyricsRoutes';
 // import searchRoutes from './routes/searchRoutes';
@@ -71,7 +71,7 @@ app.get('/health', (request, response) => {
 // Example: app.use('/api', apiRouter);
 
 // API Routes
-// app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes);
 // app.use('/api/musics', musicRoutes);
 // app.use('/api/lyrics', lyricsRoutes);
 // app.use('/api/search', searchRoutes);
