@@ -12,6 +12,7 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 
 import userRoutes from './routes/userRoutes';
+import trackRoutes from './routes/trackRoutes.js';
 // import musicRoutes from './routes/musicRoutes';
 // import lyricsRoutes from './routes/lyricsRoutes';
 // import searchRoutes from './routes/searchRoutes';
@@ -72,6 +73,7 @@ app.get('/health', (request, response) => {
 
 // API Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tracks', trackRoutes);
 // app.use('/api/musics', musicRoutes);
 // app.use('/api/lyrics', lyricsRoutes);
 // app.use('/api/search', searchRoutes);
@@ -103,7 +105,7 @@ mongoose.connect(MONGODB_URI, {
   .catch((error) => console.error('MongoDB connection error:', error));
 
 const server = app.listen(PORT, () => {
-  console.log(`ALM-Server Listening to requests on http://localhost:${PORT}`);
+  console.log(`ALM-Server is listening to requests on: http://localhost:${PORT}`);
 });
 
 /**

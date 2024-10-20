@@ -36,4 +36,3 @@ trackSchema.index({ title: 'text', artist: 'text', album: 'text', genre: 'text' 
 const Track = mongoose.model('Track', trackSchema);
 
 export default Track;
-
