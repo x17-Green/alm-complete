@@ -323,4 +323,8 @@ psd
 thumb
 sketch
 
+# Documentations
+docs
+
+
 # End of https://www.toptal.com/developers/gitignore/api/node,react,python
