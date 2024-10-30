@@ -85,3 +85,4 @@ Now, let's go through each directory and file, explaining their purpose:
     - `.gitignore`: Specify files and directories to be ignored by git.
     - `package.json`: Project dependencies and scripts.
     - `server.js`: Main entry point for the server application.
+
