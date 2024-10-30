@@ -4,12 +4,23 @@
 /**
 * Required External Modules
 */
+
 import { config } from 'dotenv';
 import express, { json, urlencoded } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+
+/**
+ * Required System Modules
+*/
+
+// import { errorHandler } from './middleware/errorHandler';
+
+/**
+* API Route Definitions
+*/
 
 import authRoutes from './routes/api/authRoutes';
 import trackRoutes from './routes/trackRoutes';
@@ -18,8 +29,6 @@ import searchRoutes from './routes/searchRoutes';
 // import musicRoutes from './routes/musicRoutes';
 // import lyricsRoutes from './routes/lyricsRoutes';
 
-
-// import { errorHandler } from './middleware/errorHandler';
 
 // Load environment variables from .env file
 config();
@@ -62,16 +71,6 @@ app.use(urlencoded({ extended: true }));
 app.get('/health', (request, response) => {
   response.status(200).json({ status: 'OK' });
 });
-
-// TODO: Add route definitions here
-// Example: app.use('/api/lyrics', lyricsRouter);
-
-/**
-* API Route Connections
-*/
-
-// TODO: Connect API routes here
-// Example: app.use('/api', apiRouter);
 
 // API Routes
 app.use('/api/auth', authRoutes);
