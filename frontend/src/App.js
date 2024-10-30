@@ -1,23 +1,21 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
+import TrackSearch from './components/TrackSearch';
+import TrackPlayer from './components/TrackPlayer';
 import './App.css';
 
 function App() {
+  const [selectedTrackId, setSelectedTrackId] = useState(null);
+
+  const handleTrackSelect = (trackId) => {
+    setSelectedTrackId(trackId);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Afro Lyrics Mania</h1>
+      <TrackSearch onTrackSelect={handleTrackSelect} />
+      {selectedTrackId && <TrackPlayer trackId={selectedTrackId} />}
     </div>
   );
 }
