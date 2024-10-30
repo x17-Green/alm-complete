@@ -1,13 +1,2 @@
-module.exports = {
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          targets: {
-            node: 'current',
-          },
-        },
-      ],
-    ],
-  };
-  
+export const presets = ['@babel/preset-env'];
+export const plugins = ['@babel/plugin-proposal-object-rest-spread'];
