@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 // server.js - Main server entry point for Afro-Lyrics-Mania
 
 /**
@@ -85,7 +84,7 @@ app.use('/api/search', searchRoutes);
 * Global Error Handler
 */
 
-// eslint-disable-next-line no-unused-vars
+ 
 app.use((error, request, response, next) => {
   console.error(`[${new Date().toISOString()}] ${error.stack}`);
   response.status(error.status || 500).json({
