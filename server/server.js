@@ -4,33 +4,29 @@
 * Required External Modules
 */
 
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import { config } from 'dotenv';
 import express, { json, urlencoded } from 'express';
-import helmet from 'helmet';
-import cors from 'cors';
-import morgan from 'morgan';
-import mongoose from 'mongoose';
 
 /**
- * Required System Modules
+ * Required App Modules
 */
 
-// import { errorHandler } from './middleware/errorHandler';
+import connectToDatabase from './config/database.js';
+import { errorHandler } from './middleware/errorHandler';
 
 /**
 * API Route Definitions
 */
 
-import authRoutes from './routes/api/authRoutes';
 import trackRoutes from './routes/trackRoutes';
 import searchRoutes from './routes/searchRoutes';
+import authRoutes from './routes/api/authRoutes';
 // import streamRoutes from './routes/streamRoutes';
 // import musicRoutes from './routes/musicRoutes';
 // import lyricsRoutes from './routes/lyricsRoutes';
-
-
-// Load environment variables from .env file
-config();
 
 /**
 * App Variables
@@ -43,6 +39,9 @@ const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://localhost:27017/alm-de
 /**
 *  App Configuration
 */
+
+// Load environment variables from .env file
+config();
 
 // Enhanced security with helmet
 app.use(helmet());
@@ -60,7 +59,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 // Error handling middleware
-// app.use(errorHandler);
+app.use(errorHandler);
 
 /**
 * Routes Definitions
@@ -81,29 +80,11 @@ app.use('/api/search', searchRoutes);
 // app.use('/api/stream', streamRoutes);
 
 /**
-* Global Error Handler
-*/
-
- 
-app.use((error, request, response, next) => {
-  console.error(`[${new Date().toISOString()}] ${error.stack}`);
-  response.status(error.status || 500).json({
-    error: {
-      message: error.message,
-      status: error.status || 500,
-    },
-  });
-});
-
-/**
 * Server Activation
 */
 
 // Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-})
-  .then(() => console.log(`Connected to MongoDB at: ${MONGODB_URI}`))
-  .catch((error) => console.error('MongoDB connection error:', error));
+connectToDatabase(MONGODB_URI);
 
 const server = app.listen(PORT, () => {
   console.log(`ALM-Server is listening to requests on: http://localhost:${PORT}`);
