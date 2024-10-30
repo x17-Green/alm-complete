@@ -11,12 +11,13 @@ import cors from 'cors';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 
-import userRoutes from './routes/userRoutes';
-import trackRoutes from './routes/trackRoutes.js';
+import authRoutes from './routes/api/authRoutes';
+import trackRoutes from './routes/trackRoutes';
+import searchRoutes from './routes/searchRoutes';
+// import streamRoutes from './routes/streamRoutes';
 // import musicRoutes from './routes/musicRoutes';
 // import lyricsRoutes from './routes/lyricsRoutes';
-// import searchRoutes from './routes/searchRoutes';
-// import streamRoutes from './routes/streamRoutes';
+
 
 // import { errorHandler } from './middleware/errorHandler';
 
@@ -46,6 +47,7 @@ app.use(morgan('dev'));
 
 // Parse JSON bodies
 app.use(json());
+
 // Parse URL-encoded bodies
 app.use(urlencoded({ extended: true }));
 
@@ -72,8 +74,9 @@ app.get('/health', (request, response) => {
 // Example: app.use('/api', apiRouter);
 
 // API Routes
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/tracks', trackRoutes);
+app.use('/api/search', searchRoutes);
 // app.use('/api/musics', musicRoutes);
 // app.use('/api/lyrics', lyricsRoutes);
 // app.use('/api/search', searchRoutes);

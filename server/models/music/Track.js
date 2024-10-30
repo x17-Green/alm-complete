@@ -18,9 +18,16 @@ const trackSchema = new mongoose.Schema({
     duration: {
         type: Number
     },
-    filePath: {
+    spotifyId: {
         type: String,
-        required: true
+        sparse: true,
+        unique: true
+    },
+    previewUrl: {
+        type: String
+    },
+    imageUrl: {
+        type: String
     },
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,

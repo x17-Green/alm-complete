@@ -1,14 +1,12 @@
 // Define track related endpoints
 
 import express from 'express';
-import { searchTracks, getAllTracks, addTrack } from '../controllers/trackController';
 import { authenticate } from '../middleware/auth';
+import { getAllTracks, addTrack } from '../controllers/trackController.js';
 
 const router = express.Router();
 
-router.get('/search', searchTracks);
-router.get('/', getAllTracks);
-router.post('/', authenticate, addTrack);
+router.get('/list', getAllTracks)
+router.post('/add', authenticate, addTrack);
 
 export default router;
-
