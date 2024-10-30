@@ -129,3 +129,6 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
   // TODO: Add application-specific logging, error reporting, or recovery logic here
 });
+
+// Export the app for testing
+export default app;
