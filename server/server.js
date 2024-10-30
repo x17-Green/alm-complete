@@ -56,7 +56,7 @@ import express, { json, urlencoded } from 'express';
 * Required App Modules
 */
 
-import connectToDatabase from './config/database.js';
+import connectToDatabase from './config/database';
 import { errorHandler } from './middleware/errorHandler';
 
 /**
