@@ -1,0 +1,21 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import { GlobalStyle } from './styles/GlobalStyles';
+import './App.css';
+
+function App() {
+  return (
+    <Router>
+      <GlobalStyle />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {/* You can add more routes here in the future */}
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;

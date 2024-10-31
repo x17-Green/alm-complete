@@ -1,0 +1,172 @@
+import React from 'react';
+import styled from 'styled-components';
+
+const NavBar = styled.nav`
+  background: var(--nav-background, #141318);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: var(--navbar-height, 4rem);
+`;
+
+const Navigation = styled.ul`
+  max-width: 40rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  align-items: center;
+`;
+
+const NavItem = styled.li`
+  position: relative;
+  transition: all 0.5s ease;
+  flex-grow: 1;
+  user-select: none;
+
+  &:hover {
+    background: var(--nav-item-bg-hover, #79797920);
+  }
+
+  &:hover .subnavigation__wrapper {
+    max-height: 20rem;
+    top: var(--navbar-height, 4rem);
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+  }
+`;
+
+const NavLink = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-white, white);
+  min-height: 4rem;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  text-decoration: none;
+  background-image: linear-gradient(
+    to right,
+    var(--primary, #24ce8f),
+    var(--primary, #24ce8f) 50%,
+    var(--text-white, white) 50%
+  );
+  background-size: 200% 100%;
+  background-position: -100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.7s ease;
+  gap: 0.25rem;
+
+  &:hover {
+    background-position: 0;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    transition: all 0.7s ease;
+  }
+
+  &:hover svg {
+    stroke: var(--primary, #24ce8f);
+    transform: rotate(90deg);
+  }
+`;
+
+const SubNavWrapper = styled.div`
+  overflow: hidden;
+  max-height: 0;
+  position: absolute;
+  transition: max-height 0.3s ease-in-out;
+  background-color: var(--nav-background, #141318);
+  width: 100%;
+`;
+
+const SubNavList = styled.ul`
+  list-style: none;
+`;
+
+const ChevronIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="chevron"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    strokeWidth="2"
+    stroke="white"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M9 6l6 6l-6 6"></path>
+  </svg>
+);
+
+const Header = () => {
+  return (
+    <NavBar>
+      <Navigation>
+        <NavItem>
+          <NavLink href="#home" title="Home">
+            Home
+            <ChevronIcon />
+          </NavLink>
+          <SubNavWrapper className="subnavigation__wrapper">
+            <SubNavList>
+              <li>
+                <NavLink href="#services" title="Services">
+                  Services
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="#portfolio" title="Portfolio">
+                  Portfolio
+                </NavLink>
+              </li>
+            </SubNavList>
+          </SubNavWrapper>
+        </NavItem>
+
+        <NavItem>
+          <NavLink href="#blog" title="Blog">
+            Blog
+          </NavLink>
+        </NavItem>
+
+        <NavItem>
+          <NavLink href="#company" title="Company">
+            Company
+            <ChevronIcon />
+          </NavLink>
+          <SubNavWrapper className="subnavigation__wrapper">
+            <SubNavList>
+              <li>
+                <NavLink href="#about" title="About">
+                  About
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="#contact-us" title="Contact Us">
+                  Contact Us
+                </NavLink>
+              </li>
+              <li>
+                <NavLink href="#blog">
+                  Blog
+                </NavLink>
+              </li>
+            </SubNavList>
+          </SubNavWrapper>
+        </NavItem>
+      </Navigation>
+    </NavBar>
+  );
+};
+
+export default Header;

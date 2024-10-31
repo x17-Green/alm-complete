@@ -1,10 +1,10 @@
+// HomePage.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
-import TrackSearch from './components/TrackSearch';
-import TrackPlayer from './components/TrackPlayer';
-import './App.css';
+import TrackSearch from '../components/TrackSearch';
+import TrackPlayer from '../components/TrackPlayer';
+import BentoDashboard from '../components/BentoDashboard';
 
-function App() {
+const HomePage = () => {
   const [selectedTrackId, setSelectedTrackId] = useState(null);
 
   const handleTrackSelect = (trackId) => {
@@ -13,11 +13,12 @@ function App() {
 
   return (
     <div className="App">
+      <BentoDashboard />
       <h1>Afro Lyrics Mania</h1>
       <TrackSearch onTrackSelect={handleTrackSelect} />
       {selectedTrackId && <TrackPlayer trackId={selectedTrackId} />}
     </div>
   );
-}
+};
 
-export default App;
+export default HomePage;

@@ -1,10 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-function TrackPlayer({ trackId }) {
-  const [track, setTrack] = useState(null);
+interface Track {
+  title: string;
+  artist: string;
+  imageUrl: string;
+  previewUrl: string;
+}
+
+interface TrackPlayerProps {
+  trackId: string;
+}
+
+const TrackPlayer: React.FC<TrackPlayerProps> = ({ trackId }) => {
+  const [track, setTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
     const fetchTrack = async () => {
@@ -20,9 +31,9 @@ function TrackPlayer({ trackId }) {
   
   const togglePlay = () => {
     if (isPlaying) {
-      audioRef.current.pause();
+      audioRef.current?.pause();
     } else {
-      audioRef.current.play();
+      audioRef.current?.play();
     }
     setIsPlaying(!isPlaying);
   };
@@ -31,13 +42,13 @@ function TrackPlayer({ trackId }) {
   
   return (
     <div>
-    <h2>{track.title}</h2>
-    <p>{track.artist}</p>
-    <img src={track.imageUrl} alt={track.title} style={{ width: '200px' }} />
-    <audio ref={audioRef} src={track.previewUrl} />
-    <button onClick={togglePlay}>{isPlaying ? 'Pause' : 'Play'}</button>
+      <h2>{track.title}</h2>
+      <p>{track.artist}</p>
+      <img src={track.imageUrl} alt={track.title} style={{ width: '200px' }} />
+      <audio ref={audioRef} src={track.previewUrl} />
+      <button onClick={togglePlay}>{isPlaying ? 'Pause' : 'Play'}</button>
     </div>
   );
-};
+}
 
 export default TrackPlayer;
