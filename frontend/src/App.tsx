@@ -7,6 +7,9 @@ import Features from './components/Features'
 import About from './components/About'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import TrackSearch from './components/TrackSearch'
+import Login from './components/Login'
+import Register from './components/Register'
 
 // Create a custom theme
 const theme = createTheme({
@@ -51,6 +54,9 @@ const App = () => {
               <Route path="/features" element={<Features />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/search" element={<TrackSearch />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
           <Footer />

@@ -4,7 +4,8 @@ import Typography from '@mui/material/Typography'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
-import { Facebook, Twitter, Instagram } from '@mui/icons-material'
+import { Facebook, Instagram } from '@mui/icons-material'
+import XIcon from '@mui/icons-material/X';
 
 export default function Footer() {
   return (
@@ -24,26 +25,26 @@ export default function Footer() {
               Contact Us
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              123 Music Street, Lagos, Nigeria
+              Lekki, Lagos, Nigeria
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Email: info@afrolyricsmania.com
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Phone: +234 123 456 7890
+              Phone: +234 913 414 1142
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h6" color="text.primary" gutterBottom>
               Follow Us
             </Typography>
-            <Link href="https://www.facebook.com/" color="inherit" sx={{ mr: 2 }}>
+            <Link href="https://www.facebook.com/afrolyricsmania" color="inherit" sx={{ mr: 2 }}>
               <Facebook />
             </Link>
-            <Link href="https://www.twitter.com/" color="inherit" sx={{ mr: 2 }}>
-              <Twitter />
+            <Link href="https://www.x.com/afrolyricsmania" color="inherit" sx={{ mr: 2 }}>
+              <XIcon />
             </Link>
-            <Link href="https://www.instagram.com/" color="inherit">
+            <Link href="https://www.instagram.com/afrolyricsmania" color="inherit">
               <Instagram />
             </Link>
           </Grid>

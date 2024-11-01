@@ -53,7 +53,7 @@ export default function Home() {
           color="primary"
           size="large"
           component={RouterLink}
-          to="/features"
+          to="/register"
           sx={{ mt: 2 }}
         >
           Get Started

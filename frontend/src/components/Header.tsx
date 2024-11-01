@@ -23,6 +23,8 @@ export default function Header() {
     { name: 'Features', path: '/features' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Search', path: '/search' },
+    { name: 'Login', path: '/login' },
   ]
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
