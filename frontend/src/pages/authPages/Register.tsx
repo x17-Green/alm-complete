@@ -129,7 +129,7 @@ export default function Register() {
           errorMessage = 'User role is required.';
           valid = false;
         }
-        if (role == 'artist') {
+        if (role === 'artist') {
           if (!userData.spotifyLink || !userData.appleMusicLink) {
             errorMessage = 'Spotify and AppleMusic links required'
             valid = false;
@@ -138,7 +138,7 @@ export default function Register() {
         break;
       case 3:
         // Validation for Additional Info
-        if (userData.bio == '') {
+        if (userData.bio === '') {
           if (!userData.bio) {
             errorMessage = 'Bio is required.';
             valid = false;

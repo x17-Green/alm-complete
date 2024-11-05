@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { 
   Container, 
   Typography, 
@@ -12,37 +12,69 @@ import {
   Link,
   useTheme,
   useMediaQuery
-} from '@mui/material'
+} from '@mui/material';
 import { 
   Google as GoogleIcon, 
   Apple as AppleIcon, 
   Facebook as FacebookIcon,
   LinkedIn as LinkedInIcon,
   Contactless as ContactlessIcon
-} from '@mui/icons-material'
+} from '@mui/icons-material';
+import { loginUser } from '../../utils/api'; // Import the loginUser function
 
 export default function Login() {
   const [loginData, setLoginData] = useState({
     usernameOrEmail: '',
     password: ''
-  })
-
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  });
+  const [error, setError] = useState<string | null>(null); // State for error messages
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setLoginData(prevState => ({
       ...prevState,
       [name]: value
-    }))
-  }
+    }));
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log('Login data:', loginData)
-    // Here you would typically send the login data to your server
-  }
+  const validateInputs = () => {
+    const { usernameOrEmail, password } = loginData;
+    let valid = true;
+    let errorMessage = '';
+
+    if (!usernameOrEmail) {
+      errorMessage = 'Username or Email is required.';
+      valid = false;
+    } else if (!password) {
+      errorMessage = 'Password is required.';
+      valid = false;
+    }
+
+    if (!valid) {
+      setError(errorMessage);
+    } else {
+      setError(null);
+    }
+
+    return valid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateInputs()) return; // Validate inputs before proceeding
+
+    try {
+      const response = await loginUser(loginData); // Call the login API
+      console.log('Login successful:', response);
+      navigate('/dashboard'); // Redirect to the dashboard or another page on success
+    } catch (error) {
+      setError('Login failed. Please check your credentials and try again.');
+      console.error('Login error:', error);
+    }
+  };
 
   const oauthProviders = [
     { name: 'Google', icon: <GoogleIcon /> },
@@ -52,7 +84,7 @@ export default function Login() {
     { name: 'Spotify', icon: <ContactlessIcon /> },
     { name: 'Apple Music', icon: '🎵' },
     { name: 'TikTok', icon: '🎵' },
-  ]
+  ];
 
   return (
     <Box 
@@ -78,6 +110,7 @@ export default function Login() {
           <Typography component="h1" variant="h5" align="center" gutterBottom>
             Log in to Afro Lyrics Mania
           </Typography>
+          {error && <Typography color="error">{error}</Typography>} {/* Display error message */}
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -140,5 +173,5 @@ export default function Login() {
         </Paper>
       </Container>
     </Box>
-  )
+  );
 }

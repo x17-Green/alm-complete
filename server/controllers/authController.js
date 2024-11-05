@@ -86,27 +86,20 @@ export const register = async (req, res) => {
 // Login
 export const login = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { usernameOrEmail, password } = req.body;
 
     // Validate user input data
-    if (!username || !email || !password) {
+    if (!usernameOrEmail || !password) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
-    // Check for existing username and email
+    // Check for existing user by username or email
     const user = await User.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
 
     if (!user) {
       return res.status(400).json({ message: 'User not found' });
-    }
-
-    if (user.username !== username) {
-      return res.status(400).json({ message: 'Incorrect username' });
-    }
-    if (user.email !== email) {
-      return res.status(400).json({ message: 'Incorrect email address' });
     }
 
     // Compare provided password with hashed password in database
