@@ -89,16 +89,19 @@ config();
 app.use(helmet());
 
 // Enable CORS
-app.use(cors());
+app.use(cors({
+  origin: `http://localhost:3000`, // Adjust this to your frontend's URL
+  credentials: true // Allow credentials if needed
+}));
 
 // Logging middleware
 app.use(morgan('dev'));
 
-// Parse JSON bodies
-app.use(json());
+// Parse JSON bodies with a larger limit
+app.use(json({ limit: '10mb' })); // Increase the limit as needed
 
-// Parse URL-encoded bodies
-app.use(urlencoded({ extended: true }));
+// Parse URL-encoded bodies with a larger limit
+app.use(urlencoded({ extended: true, limit: '10mb' })); // Increase the limit as needed
 
 // Error handling middleware
 app.use(errorHandler);

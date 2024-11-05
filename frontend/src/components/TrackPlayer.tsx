@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import React, { useEffect, useRef } from 'react';
+import { IconButton, Box } from '@mui/material';
+import { PlayArrow, Pause } from '@mui/icons-material';
 
 interface Track {
+  _id: string;
   title: string;
   artist: string;
   imageUrl: string;
@@ -9,45 +11,41 @@ interface Track {
 }
 
 interface TrackPlayerProps {
-  trackId: string;
+  track: Track;
+  isPlaying: boolean;
+  onPlayPause: (trackId: string) => void;
 }
 
-const TrackPlayer: React.FC<TrackPlayerProps> = ({ trackId }) => {
-  const [track, setTrack] = useState<Track | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+const TrackPlayer: React.FC<TrackPlayerProps> = ({ track, isPlaying, onPlayPause }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   useEffect(() => {
-    const fetchTrack = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/api/tracks/${trackId}`);
-        setTrack(response.data);
-      } catch (error) {
-        console.error('Error fetching track:', error);
+    if (isPlaying) {
+      audioRef.current?.play();
+    } else {
+      audioRef.current?.pause();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     };
-    fetchTrack();
-  }, [trackId]);
+  }, []);
   
-  const togglePlay = () => {
-    if (isPlaying) {
-      audioRef.current?.pause();
-    } else {
-      audioRef.current?.play();
-    }
-    setIsPlaying(!isPlaying);
+  const handlePlayPause = () => {
+    onPlayPause(track._id);
   };
   
-  if (!track) return <div>Loading...</div>;
-  
   return (
-    <div>
-      <h2>{track.title}</h2>
-      <p>{track.artist}</p>
-      <img src={track.imageUrl} alt={track.title} style={{ width: '200px' }} />
+    <Box display="flex" alignItems="center">
+      <IconButton onClick={handlePlayPause}>
+        {isPlaying ? <Pause /> : <PlayArrow />}
+      </IconButton>
       <audio ref={audioRef} src={track.previewUrl} />
-      <button onClick={togglePlay}>{isPlaying ? 'Pause' : 'Play'}</button>
-    </div>
+    </Box>
   );
 }
 

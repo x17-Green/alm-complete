@@ -2,14 +2,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Header from './components/Header'
-import Home from './components/Home'
-import Features from './components/Features'
-import About from './components/About'
-import Contact from './components/Contact'
+import Home from './pages/Home'
+import Features from './pages/Features'
+import About from './pages/About'
+import Contact from './pages/Contact'
 import Footer from './components/Footer'
 import TrackSearch from './components/TrackSearch'
-import Login from './components/Login'
-import Register from './components/Register'
+import Login from './pages/authPages/Login'
+import Register from './pages/authPages/Register'
+import EmailVerification from './pages/authPages/EmailVerification'
 
 // Create a custom theme
 const theme = createTheme({
@@ -57,6 +58,7 @@ const App = () => {
               <Route path="/search" element={<TrackSearch />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/register/verify-email" element={<EmailVerification />} />
             </Routes>
           </main>
           <Footer />

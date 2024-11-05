@@ -2,7 +2,7 @@
 
 import express from 'express';
 import { authenticate } from '../middleware/auth';
-import { getAllTracks, addTrack } from '../controllers/trackController.js';
+import { getAllTracks, addTrack } from '../controllers/trackController';
 
 const router = express.Router();
 

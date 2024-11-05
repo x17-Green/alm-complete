@@ -1,8 +1,8 @@
 // Implement search functionality.
 
-import { searchTracks as spotifySearchTracks } from '../services/spotifyService.js';
-import SearchResult from '../models/music/searchResult.js';
-import Track from '../models/music/Track.js';
+import { searchTracks as spotifySearchTracks } from '../services/spotifyService';
+import SearchResult from '../models/music/searchResult';
+import Track from '../models/music/Track';
 
 // Search tracks
 export const searchTracks = async (req, res) => {

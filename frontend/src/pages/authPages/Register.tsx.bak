@@ -19,6 +19,7 @@ import {
   SelectChangeEvent
 } from '@mui/material'
 import ProfilePictureModal from './ProfilePictureModal'
+import { registerUser } from '../utils/api'
 
 interface UserData {
   username: string
@@ -55,6 +56,7 @@ export default function Register() {
     bio: ''
   })
   const [isProfilePictureModalOpen, setIsProfilePictureModalOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<'artist' | 'musicLover'>) => {
     const { name, value } = e.target
@@ -72,10 +74,16 @@ export default function Register() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Registration data:', userData)
-    // Here you would typically send the registration data to your server
+    try {
+      const response = await registerUser(userData)
+      console.log('Registration successful:', response)
+      // Redirect or show success message
+    } catch (error) {
+      setError('Registration failed. Please try again.')
+      console.error('Registration error:', error)
+    }
   }
 
   const handleProfilePictureSelect = (pictureUrl: string) => {
@@ -230,7 +238,7 @@ export default function Register() {
             <TextField
               fullWidth
               name="bio"
-              label="Bio"
+              label="Tell us more about yourself."
               multiline
               rows={4}
               value={userData.bio}
@@ -274,6 +282,7 @@ export default function Register() {
           <Typography component="h1" variant="h5" align="center" gutterBottom>
             Create Your Afro Lyrics Mania Account
           </Typography>
+          {error && <Typography color="error">{error}</Typography>}
           <Stepper activeStep={activeStep} alternativeLabel sx={{ margin: '20px 0' }}>
             {steps.map((label) => (
               <Step key={label}>

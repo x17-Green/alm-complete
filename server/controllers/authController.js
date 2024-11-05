@@ -8,11 +8,11 @@ import User from '../models/User';
 export const register = async (req, res) => {
   try {
     const {
-      firstName, lastName, username, email, password,
+      firstName, lastName, username, email, password, dateOfBirth, country, city, role, spotifyLink, appleMusicLink, bio,
     } = req.body;
 
     // Validate user input data
-    if (!firstName || !lastName || !username || !email || !password) {
+    if (!firstName || !lastName || !username || !email || !password || !dateOfBirth || !country || !city || !role) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
@@ -38,6 +38,13 @@ export const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      dateOfBirth,
+      country,
+      city,
+      role,
+      spotifyLink,
+      appleMusicLink,
+      bio,
     });
 
     // Save user to database
@@ -56,6 +63,14 @@ export const register = async (req, res) => {
           username: user.username,
           email: user.email,
           fullName: user.fullName,
+          dateOfBirth: user.dateOfBirth,
+          country: user.country,
+          city: user.city,
+          role: user.role,
+          spotifyLink: user.spotifyLink,
+          appleMusicLink: user.appleMusicLink,
+          bio: user.bio,
+          profilePicture: user.profilePicture,
         },
       },
     };
@@ -144,4 +159,26 @@ export const profile = async (req, res) => {
     console.error(error);
     return res.status(500).json({ message: 'Error retrieving user profile' });
   }
+};
+
+// Check existing user
+export const checkExistingUser = async (req, res) => {
+  const { username, email } = req.body;
+
+  // Check if existing user
+  const existingUser = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (existingUser) {
+    // If an existing user is found, respond with a 409 Conflict status
+    return res.status(409).json({ 
+      message: existingUser.username === username 
+        ? `Username: ${existingUser.username} already exists` 
+        : `Email address: ${existingUser.email} already exists` 
+    });
+  }
+
+  // Success case: No existing user found
+  return res.status(200).json({ message: 'No existing user found' });
 };
