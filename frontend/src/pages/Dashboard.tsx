@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Typography } from '@mui/material';
-import { LogoutButton } from '../components/LogoutButton';
+import { LogoutButton } from './authPages/LogoutButton';
 // import LogoutButton from './LogoutButton'; // Adjust the import path as necessary
 
 const Dashboard = () => {

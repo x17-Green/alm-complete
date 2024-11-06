@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, CircularProgress } from '@mui/material';
-import { logoutUser  } from '../utils/api';
+import { logoutUser  } from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 interface LogoutButtonProps {

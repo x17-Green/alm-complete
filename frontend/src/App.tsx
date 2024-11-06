@@ -11,7 +11,7 @@ import TrackSearch from './components/TrackSearch'
 import Login from './pages/authPages/Login'
 import Register from './pages/authPages/Register'
 import EmailVerification from './pages/authPages/EmailVerification'
-import { LogoutButton } from './components/LogoutButton'
+import { LogoutButton } from './pages/authPages/LogoutButton'
 import Logout from './pages/authPages/Logout'
 import Dashboard from './pages/Dashboard'
 

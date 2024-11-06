@@ -1,22 +1,24 @@
-import { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
-import Drawer from '@mui/material/Drawer'
-import List from '@mui/material/List'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
-import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { LogoutButton } from '../pages/authPages/LogoutButton';
+// import LogoutButton from './LogoutButton'; // Import the LogoutButton component
 
 export default function Header() {
-  const [drawerOpen, setDrawerOpen] = useState(false)
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -25,18 +27,18 @@ export default function Header() {
     { name: 'Contact', path: '/contact' },
     { name: 'Search', path: '/search' },
     { name: 'Login', path: '/login' },
-    { name: 'Logout', path: '/logout' },
-  ]
+    // Remove the Logout path from here
+  ];
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
       event.type === 'keydown' &&
       ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
     ) {
-      return
+      return;
     }
-    setDrawerOpen(open)
-  }
+    setDrawerOpen(open);
+  };
 
   const drawer = (
     <div
@@ -50,9 +52,15 @@ export default function Header() {
             <ListItemText primary={item.name} />
           </ListItemButton>
         ))}
+        {/* Add the LogoutButton here */}
+        <ListItemButton>
+          <ListItemText>
+            <LogoutButton />
+          </ListItemText>
+        </ListItemButton>
       </List>
     </div>
-  )
+  );
 
   return (
     <AppBar position="static">
@@ -82,9 +90,11 @@ export default function Header() {
                 {item.name}
               </Button>
             ))}
+            {/* Add the LogoutButton directly in the navigation for larger screens */}
+            <LogoutButton />
           </nav>
         )}
       </Toolbar>
     </AppBar>
-  )
+  );
 }
