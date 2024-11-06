@@ -11,6 +11,9 @@ import TrackSearch from './components/TrackSearch'
 import Login from './pages/authPages/Login'
 import Register from './pages/authPages/Register'
 import EmailVerification from './pages/authPages/EmailVerification'
+import { LogoutButton } from './components/LogoutButton'
+import Logout from './pages/authPages/Logout'
+import Dashboard from './pages/Dashboard'
 
 // Create a custom theme
 const theme = createTheme({
@@ -59,6 +62,9 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/register/verify-email" element={<EmailVerification />} />
+              <Route path="/logout-now" element={<LogoutButton />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </main>
           <Footer />

@@ -1,8 +1,11 @@
 // JWT authentication middleware.
 
 import jwt from 'jsonwebtoken';
+import Redis from 'ioredis';
 
-export const authenticate = (req, res, next) => {
+const redisClient = new Redis(); // Connect to Redis
+
+export const authenticate = async (req, res, next) => {
   const token = req.header('Authorization');
 
   if (!token) {
@@ -10,6 +13,12 @@ export const authenticate = (req, res, next) => {
   }
 
   try {
+    // Check if the token is in the blocklist
+    const exists = await redisClient.exists(token);
+    if (exists) {
+      return res.status(401).json({ message: 'Token has been revoked. Please log in again.' });
+    }
+
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.user = decoded;
     next();

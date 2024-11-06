@@ -65,13 +65,24 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateInputs()) return; // Validate inputs before proceeding
-
+  
     try {
-      const response = await loginUser(loginData); // Call the login API
+      const response = await loginUser (loginData); // Call the login API
       console.log('Login successful:', response);
-      navigate('/dashboard'); // Redirect to the dashboard or another page on success
-    } catch (error) {
-      setError('Login failed. Please check your credentials and try again.');
+      
+      // Assuming the response contains a token, store it in localStorage
+      if (response.jwtToken) { // Adjust this line according to your actual response structure
+        localStorage.setItem('jwtToken', response.jwtToken); // Store the token in localStorage
+      }
+      
+      navigate('/dashboard'); // Redirect to the dashboard on success
+    } catch (error: any) {
+      // Check if the error response exists and set the error message accordingly
+      if (error.response) {
+        setError(error.response.data.message); // Set the error message from the backend
+      } else {
+        setError('Login failed. Please check your credentials and try again.'); // Fallback error message
+      }
       console.error('Login error:', error);
     }
   };

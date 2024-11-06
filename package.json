@@ -16,6 +16,7 @@
     "start": "concurrently \"npm run dev\" \"npm run ui\""
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/register": "^7.25.9",
     "@eslint/js": "^9.13.0",
     "babel-cli": "^6.26.0",

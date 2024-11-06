@@ -25,6 +25,7 @@ export default function Header() {
     { name: 'Contact', path: '/contact' },
     { name: 'Search', path: '/search' },
     { name: 'Login', path: '/login' },
+    { name: 'Logout', path: '/logout' },
   ]
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {

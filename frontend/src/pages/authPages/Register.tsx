@@ -85,18 +85,18 @@ export default function Register() {
           errorMessage = 'Email address is invalid.';
           valid = false;
         } 
-        if (!password) {
-          errorMessage = 'Password is required.';
-          valid = false;
-        } else if (password.length < 6) {
-          errorMessage = 'Password must be at least 6 characters long.';
-          valid = false;
-        }
         if (!confirmPassword || confirmPassword.length <= 0) {
           errorMessage = 'Please confirm your password';
           valid = false;
         } else if (password !== confirmPassword) {
           errorMessage = 'Passwords do not match.';
+          valid = false;
+        }
+        if (!password) {
+          errorMessage = 'Password is required.';
+          valid = false;
+        } else if (password.length < 6) {
+          errorMessage = 'Password must be at least 6 characters long.';
           valid = false;
         }
         break;
@@ -176,20 +176,43 @@ export default function Register() {
   };
 
   const handleNext = async () => {
-    if (activeStep === 0) {
-      // Check for existing user before moving to the next step
-      try {
-        const existingUserResponse = await checkExistingUser(userData.username, userData.email);
-        if (existingUserResponse.status === 409) {
-          setError(existingUserResponse.data.message);
-          return; // Prevent moving to the next step
-        }
-      } catch (error) {
-        setError('Error checking existing user. Please try again.');
-        return; // Prevent moving to the next step
-      }
+    // Check for empty fields before proceeding
+    const { username, email, password, confirmPassword, firstName, lastName, dateOfBirth, country, city, role, spotifyLink, appleMusicLink, bio } = userData;
+
+    // Check if any required fields are empty
+    if (activeStep === 0 && (!username || !email)) {
+      setError('Please fill in all required fields before proceeding.');
+      return; // Prevent moving to the next step
     }
 
+    if (activeStep === 1 && (!firstName || !lastName || !dateOfBirth || !country || !city)) {
+      setError('Please fill in all required fields before proceeding.');
+      return; // Prevent moving to the next step
+    }
+
+    if (activeStep === 2 && !role) {
+      setError('Please select a user role before proceeding.');
+      return; // Prevent moving to the next step
+    }
+
+    if (activeStep === 3 && !bio) {
+      setError('Please provide a bio before proceeding.');
+      return; // Prevent moving to the next step
+    }
+
+    // Check for existing user before moving to the next step
+    try {
+      const existingUserResponse = await checkExistingUser(userData.username, userData.email);
+      if (existingUserResponse.status === 409) {
+        setError(existingUserResponse.data.message);
+        return; // Prevent moving to the next step
+      }
+    } catch (error) {
+      setError('Error checking existing user. Please try again.');
+      return; // Prevent moving to the next step
+    }
+
+    // If all validations pass, proceed to the next step
     if (await validateStep()) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -204,7 +227,8 @@ export default function Register() {
     try {
       const response = await registerUser(userData);
       console.log('Registration successful:', response);
-      navigate('/register/verify-email'); // Redirect to email verification page
+      navigate('/dashboard'); // Redirect to email verification page
+      // navigate('/register/verify-email'); // Redirect to email verification page
     } catch (error) {
       setError('Registration failed. Please try again.');
       console.error('Registration error:', error);
