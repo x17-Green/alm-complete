@@ -1,19 +1,22 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import Header from './components/Header'
-import Home from './pages/Home'
-import Features from './pages/Features'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Footer from './components/Footer'
-import TrackSearch from './components/TrackSearch'
-import Login from './pages/authPages/Login'
-import Register from './pages/authPages/Register'
-import EmailVerification from './pages/authPages/EmailVerification'
-import { LogoutButton } from './pages/authPages/LogoutButton'
-import Logout from './pages/authPages/Logout'
-import Dashboard from './pages/Dashboard'
+// src/App.tsx
+
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
+
+import Home from './pages/LandingPages/Home';
+import Features from './pages/LandingPages/Features';
+import About from './pages/LandingPages/About';
+import Contact from './pages/LandingPages/Contact';
+
+import Login from './pages/authPages/Login';
+import Register from './pages/authPages/Register';
+import EmailVerification from './pages/authPages/EmailVerification';
+import DashboardApp from './pages/Dashboard/Dashboard';
+import Logout from './pages/authPages/Logout';
+import { MainLayout } from './components/MainLayout';
+import { DashboardLayout } from './components/DashboardLayout';
 
 // Create a custom theme
 const theme = createTheme({
@@ -43,35 +46,43 @@ const theme = createTheme({
       fontWeight: 600,
     },
   },
-})
+});
 
-const App = () => {
+// Create a functional component to conditionally render headers
+
+const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/search" element={<TrackSearch />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/register/verify-email" element={<EmailVerification />} />
-              <Route path="/logout-now" element={<LogoutButton />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
-  )
-}
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes>
+          {/* Dashboard route without MainLayout */}
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard/*" element={<DashboardApp />} />
+          </Route>
+          
+          {/* All other routes with MainLayout */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/register/verify-email" element={<EmailVerification />} />
+            <Route path="/logout" element={<Logout />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
+    </AuthProvider>
+  );
+};
 
-export default App;
+// Wrap the App component with Router
+const Root: React.FC = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default Root;

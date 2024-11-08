@@ -1,9 +1,11 @@
+// src/pages/Dashboard.tsx
+
 import React from 'react';
 import { Container, Typography } from '@mui/material';
-import { LogoutButton } from './authPages/LogoutButton';
-// import LogoutButton from './LogoutButton'; // Adjust the import path as necessary
+// import DashboardHeader from '../components/DashboardHeader'; // Import the DashboardHeader
+import { LogoutButton } from '../authPages/LogoutButton'; // Adjust the import path as necessary
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>

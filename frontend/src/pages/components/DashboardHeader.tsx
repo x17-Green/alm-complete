@@ -1,4 +1,4 @@
-// src/components/Header.tsx
+// src/components/DashboardHeader.tsx
 
 import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -14,21 +14,21 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { LogoutButton } from '../pages/authPages/LogoutButton'; // Adjust the import path as necessary
-import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
+import { LogoutButton } from '../authPages/LogoutButton'; // Adjust the import path as necessary
+import { useAuth } from '../../context/AuthContext'; // Import the useAuth hook
 
-const Header: React.FC = () => {
+const DashboardHeader: React.FC = () => {
   const { isLoggedIn } = useAuth(); // Get the authentication state
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Define navigation items
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Features', path: '/features' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-    { name: 'Login', path: '/login' },
+    { name: 'Dashboard Home', path: '/dashboard' },
+    { name: 'Search', path: '/dashboard/search' },
+    { name: 'Settings', path: '/settings' },
+    { name: 'Logout', path: '/logout' },
   ];
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Afro Lyrics Mania
+          Dashboard
         </Typography>
         {isMobile ? (
           <>
@@ -102,4 +102,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header;
+export default DashboardHeader;
