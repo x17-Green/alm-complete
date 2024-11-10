@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../utils/api'; // Import the logout function
+import { logoutUser  } from '../../utils/api'; // Import the logout function
 import { AxiosError } from 'axios'; // Import AxiosError for type assertion
 
 // Define the expected structure of the error response
@@ -15,6 +15,7 @@ const Logout = () => {
     const handleLogout = async () => {
       console.log('Attempting to log out...');
       const token = localStorage.getItem('jwtToken');
+      console.log('Logout - Retrieved token:', token); // Debug log
       if (token) {
         try {
           const response = await logoutUser (token);
@@ -34,7 +35,7 @@ const Logout = () => {
 
     handleLogout();
   }, [navigate]);
-  // console.log('Executing Logout useEffect'); // Debugging statement
+
   return <div>Logging out...</div>; // Optional loading message
 };
 

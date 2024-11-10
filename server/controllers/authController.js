@@ -88,43 +88,92 @@ export const register = async (req, res) => {
   }
 };
 
+// // Login
+// export const login = async (req, res) => {
+//   try {
+//     const { usernameOrEmail, password } = req.body;
+
+//     // Validate user input data
+//     if (!usernameOrEmail || !password) {
+//       return res.status(400).json({ message: 'Please provide all required fields' });
+//     }
+
+//     // Check for existing user by username or email
+//     const existingUser = await User.findOne({
+//       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+//     });
+//     if (!existingUser ) {
+//       return res.status(404).json({ message: `Incorrect email or username: ${usernameOrEmail}` });
+//     }
+
+//     // Check if the user is already logged in
+//     const token = req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : null; // Assuming Bearer token
+//     if (token) {
+//       // Check if the token is in the blocklist
+//       const exists = await redisClient.exists(token);
+//       if (exists === 1) { // Check if the token exists in the blocklist
+//         // If the token exists in the blocklist, verify it
+//         try {
+//           const decoded = jwt.verify(token, process.env.SECRET_KEY);
+//           const existingUser  = await User.findById(decoded.userId);
+//           if (existingUser ) {
+//             const userData = {
+//               id: existingUser ._id,
+//               firstName: existingUser .firstName,
+//               lastName: existingUser .lastName,
+//               username: existingUser .username,
+//               email: existingUser .email,
+//               fullName: existingUser .fullName,
+//             };
+//             return res.status(200).json({ jwtToken: token, userData, message: 'User  is already logged in' });
+//           }
+//         } catch (err) {
+//           // Handle token verification errors (e.g., token expired, invalid token)
+//           console.error('Token verification error:', err);
+//           return res.status(401).json({ message: 'Invalid token' });
+//         }
+//       } else {
+//         // If the token does not exist in the blocklist, proceed with login
+//         console.log(`Invalid token: [${token}]\nUser  is not logged in`);
+//         return res.status(400).json({ message: 'User  is not logged in' });
+//       }
+//     }
+
+//     // Compare provided password with hashed password in database
+//     const isValidPassword = await bcrypt.compare(password, existingUser .password);
+//     if (!isValidPassword) {
+//       return res.status(401).json({ message: 'Incorrect password' });
+//     }
+
+//     // Generate JWT Token
+//     const jwtToken = jwt.sign({ userId: existingUser ._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+//     // Store the token in Redis blocklist
+//     await redisClient.set(jwtToken, '', 'EX', 3600); // Set expiration time as needed (1 hour in this case)
+
+//     // Defined user data
+//     const userData = {
+//       id: existingUser ._id,
+//       firstName: existingUser .firstName,
+//       lastName: existingUser .lastName,
+//       username: existingUser .username,
+//       email: existingUser .email,
+//       fullName: existingUser .fullName,
+//     };
+
+//     // Return JWT Token and add user data
+//     console.log({ jwtToken, userData, message: `:User  [${usernameOrEmail}] logged in successfully` });
+//     return res.status(200).json({ jwtToken, userData, message: 'Logged in successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(400).json({ message: 'Error logging in' });
+//   }
+// };
+
 // Login
 export const login = async (req, res) => {
   try {
     const { usernameOrEmail, password } = req.body;
-
-    // Check if the user is already logged in
-    const token = req.header('Authorization') ? req.header('Authorization').split(' ')[1] : null; // Assuming Bearer token
-    if (token) {
-      // Check if the token is in the blocklist
-      const exists = await redisClient.exists(token);
-      if (exists === 1) { // Check if the token exists in the blocklist
-        // If the token exists in the blocklist, verify it
-        try {
-          const decoded = jwt.verify(token, process.env.SECRET_KEY);
-          const existingUser  = await User.findById(decoded.userId);
-          if (existingUser ) {
-            const userData = {
-              id: existingUser ._id,
-              firstName: existingUser .firstName,
-              lastName: existingUser .lastName,
-              username: existingUser .username,
-              email: existingUser .email,
-              fullName: existingUser .fullName,
-            };
-            return res.status(200).json({ jwtToken: token, userData, message: 'User  is already logged in' });
-          }
-        } catch (err) {
-          // Handle token verification errors (e.g., token expired, invalid token)
-          console.error('Token verification error:', err);
-          return res.status(401).json({ message: 'Invalid token' });
-        }
-      } else {
-        // If the token does not exist in the blocklist, proceed with login
-        console.log(`Invalid token: [${token}]\nUser  is not logged in`);
-        return res.status(400).json({ message: 'User  is not logged in' });
-      }
-    }
 
     // Validate user input data
     if (!usernameOrEmail || !password) {
@@ -132,24 +181,51 @@ export const login = async (req, res) => {
     }
 
     // Check for existing user by username or email
-    const existingUser  = await User.findOne({
+    const existingUser = await User.findOne({
       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
+
     if (!existingUser ) {
       return res.status(404).json({ message: `Incorrect email or username: ${usernameOrEmail}` });
     }
 
-    // Compare provided password with hashed password in database
+    // Check if the user already has a valid token in the Redis blocklist
+    const existingToken = await redisClient.get(existingUser._id.toString());
+    if (existingToken) {
+      // User has a valid token, respond with success but do not generate a new token
+      return res.status(200).json({
+        existingToken,
+        message: 'User is already logged in with a valid session.',
+        userData: {
+          id: existingUser ._id,
+          firstName: existingUser .firstName,
+          lastName: existingUser .lastName,
+          username: existingUser .username,
+          email: existingUser .email,
+          fullName: existingUser .fullName,
+        },
+      });
+    }
+
+    // Compare provided password with hashed password in the database
     const isValidPassword = await bcrypt.compare(password, existingUser .password);
     if (!isValidPassword) {
       return res.status(401).json({ message: 'Incorrect password' });
     }
 
-    // Generate JWT Token
-    const jwtToken = jwt.sign({ userId: existingUser ._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+    // Generate JWT Token with a short expiration time (e.g., 15 minutes)
+    const jwtToken = jwt.sign({ userId: existingUser ._id }, process.env.SECRET_KEY, { expiresIn: '15m' });
 
-    // Store the token in Redis blocklist
-    await redisClient.set(jwtToken, '', 'EX', 3600); // Set expiration time as needed (1 hour in this case)
+    // Generate Refresh Token with a longer expiration time (e.g., 7 days)
+    const refreshToken = jwt.sign({ userId: existingUser ._id }, process.env.SECRET_KEY, { expiresIn: '7d' });
+
+    // Store the refresh token in Redis with a longer expiration time
+    await redisClient.set(`refreshToken:${existingUser ._id}`, refreshToken, 'EX', 604800); // 7 days in seconds
+
+    // Store the JWT token in Redis blocklist
+    await redisClient.set(existingUser._id.toString(), jwtToken, 'EX', 900); // Set expiration time as needed (1 hour in this case)
+
+    // await redisClient.set(jwtToken, '', 'EX', 900); // 15 minutes in seconds
 
     // Defined user data
     const userData = {
@@ -158,16 +234,89 @@ export const login = async (req, res) => {
       lastName: existingUser .lastName,
       username: existingUser .username,
       email: existingUser .email,
-      fullName: existingUser .fullName };
+      fullName: existingUser .fullName,
+    };
+
+    // Log the successful login attempt
+    console.log({ jwtToken, refreshToken, userData, message: `User  [${usernameOrEmail}] logged in successfully` });
 
     // Return JWT Token and add user data
-    console.log({ jwtToken, userData, message: `User  [${usernameOrEmail}] logged in successfully` });
-    return res.status(200).json({ jwtToken, userData, message: 'Logged in successfully' });
+    // console.log({ jwtToken, userData, message: `User  [${usernameOrEmail}] logged in successfully` });
+    return res.status(200).json({ jwtToken, refreshToken, userData, message: 'Logged in successfully' });
   } catch (error) {
     console.error(error);
     return res.status(400).json({ message: 'Error logging in' });
   }
 };
+
+// // Login
+// export const login = async (req, res) => {
+//   try {
+//     const { usernameOrEmail, password } = req.body;
+
+//     // Validate user input data
+//     if (!usernameOrEmail || !password) {
+//       return res.status(400).json({ message: 'Please provide all required fields' });
+//     }
+
+//     // Check for existing user by username or email
+//     const existingUser  = await User.findOne({
+//       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+//     });
+
+//     if (!existingUser ) {
+//       return res.status(404).json({ message: `Incorrect email or username: ${usernameOrEmail}` });
+//     }
+
+//     // Check if the user already has a valid token in the Redis blocklist
+//     const existingToken = await redisClient.get(existingUser ._id.toString());
+//     if (existingToken) {
+//       // User has a valid token, respond with success but do not generate a new token
+//       return res.status(200).json({
+//         existingToken,
+//         message: 'User  is already logged in with a valid session.',
+//         userData: {
+//           id: existingUser ._id,
+//           firstName: existingUser .firstName,
+//           lastName: existingUser .lastName,
+//           username: existingUser .username,
+//           email: existingUser .email,
+//           fullName: existingUser .fullName,
+//         },
+//       });
+//     }
+
+//     // Compare provided password with hashed password in the database
+//     const isValidPassword = await bcrypt.compare(password, existingUser .password);
+//     if (!isValidPassword) {
+//       return res.status(401).json({ message: 'Incorrect password' });
+//     }
+
+//     // Generate JWT Token
+//     const jwtToken = jwt.sign({ userId: existingUser._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+//     // Store the token in Redis blocklist
+//     await redisClient.set(existingUser._id.toString(), jwtToken, 'EX', 3600); // Set expiration time as needed (1 hour in this case)
+
+//     // Defined user data
+//     const userData = {
+//       id: existingUser ._id,
+//       firstName: existingUser .firstName,
+//       lastName: existingUser .lastName,
+//       username: existingUser .username,
+//       email: existingUser .email,
+//       fullName: existingUser .fullName,
+//     };
+
+//     // Return JWT Token and add user data
+//     console.log({ jwtToken, userData, message: `User  [${usernameOrEmail}] logged in successfully` });
+//     return res.status(200).json({ jwtToken, userData, message: 'Logged in successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(400).json({ message: 'Error logging in' });
+//   }
+// };
+
 
 // Profile
 export const profile = async (req, res) => {
@@ -216,45 +365,90 @@ export const checkExistingUser = async (req, res) => {
   return res.status(200).json({ message: 'No existing user found' });
 };
 
+// // Logout
+// export const logout = async (req, res) => {
+//   try {
+//     const authHeader = req.header('Authorization');
+    
+//     // Check if the Authorization header is present
+//     if (!authHeader) {
+//       return res.status(401).json({ message: 'No token provided' });
+//     }
+
+//     // Extract the token from the Authorization header
+//     const token = authHeader.replace('Bearer ', '').trim();
+    
+//     // Check if the token is empty after extraction
+//     if (!token) {
+//       return res.status(401).json({ message: 'Invalid token format' });
+//     }
+
+//     // Check if the token is in the blocklist
+//     const exists = await redisClient.exists(token);
+//     console.log('Received Token:', {token}); // Log the received token
+//     console.log('Token exists in blocklist:', exists); // Log the existence check result
+
+//     if (!exists) {
+//       console.error(`Token Error: Invalid token: \nUser not logged in`);
+//       return res.status(400).json({ message: 'User is not logged in' });
+//     }
+
+//     // Remove the token from the Redis blocklist
+//     await redisClient.del(token); // Await the deletion for confirmation
+
+//     // Clear the cookie if you're using cookies for JWT
+//     res.clearCookie('jwToken'); // Adjust the cookie name as necessary
+
+//     console.log(`User  with token: [${token}] \nLogged out successfully`);
+//     return res.status(200).json({ message: 'Logged out successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: 'Error processing logout' });
+//   }
+// };
+
+
 // Logout
-export const logout = (req, res) => {
-  const authHeader = req.header('Authorization');
-  
-  // Check if the Authorization header is present
-  if (!authHeader) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
+export const logout = async (req, res) => {
+  try {
+    const authHeader = req.header('Authorization');
 
-  // Extract the token from the Authorization header
-  const token = authHeader.replace('Bearer ', '');
-  
-  // Check if the token is empty after extraction
-  if (!token) {
-    return res.status(401).json({ message: 'Invalid token format' });
-  }
-
-  
-  // Check if the token is in the blocklist
-  redisClient.exists(token).then(exists => {
-    console.log('Received Token:', token); // Log the received token
-    console.log('Token exists in blocklist:', exists); // Log the existence check result
-    if (!exists) {
-      console.log(`Invalid token: [${token}]\nUser is not logged in`)
-      return res.status(400).json({ token, message: 'User is not logged in' });
+    // Check if the Authorization header is present
+    if (!authHeader) {
+      return res.status(401).json({ message: 'No token provided' });
     }
 
-    // Remove the token from the Redis blocklist
-    redisClient.del(token); // Remove the token from the blocklist
+    // Extract the token from the Authorization header
+    const token = authHeader.replace('Bearer ', '').trim();
+
+    // Check if the token is empty after extraction
+    if (!token) {
+      return res.status(401).json({ message: 'Invalid token format' });
+    }
+
+    // Verify the JWT token to get the user ID
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decoded.userId;
+
+    // Check if the JWT token exists in the blocklist
+    const tokenExists = await redisClient.exists(userId.toString());
+    if (!tokenExists) {
+      return res.status(400).json({ message: 'User  is not logged in' });
+    }
+
+    // Remove the JWT token from the Redis blocklist
+    await redisClient.del(userId.toString());
+
+    // Remove the refresh token from Redis
+    await redisClient.del(`refreshToken:${userId}`);
 
     // Clear the cookie if you're using cookies for JWT
     res.clearCookie('jwToken'); // Adjust the cookie name as necessary
 
-    console.log('Authorization Header:', req.header('Authorization'));
-    console.log(`User with token: [${token}] \nLogged out successfully`);
-    // json({ jwtToken, userData, message: 'Logged in successfully' });
-    return res.status(200).json({ token, message: 'Logged out successfully' });
-  }).catch(error => {
+    console.log(`User  with token: [${token}] logged out successfully`);
+    return res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error processing logout' });
-  });
+  }
 };

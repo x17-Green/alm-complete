@@ -15,6 +15,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('jwtToken'); // Use the correct token key
+      console.log('LogoutButton - Retrieved token:', token); // Debug log
       await logoutUser (token);
       localStorage.removeItem('jwtToken'); // Clear the token from localStorage
       if (onLogout) {

@@ -469,7 +469,21 @@ export default function Register() {
           <Typography component="h1" variant="h5" align="center" gutterBottom>
             Create Your Afro Lyrics Mania Account
           </Typography>
-          {error && <Typography color="error">{error}</Typography>}
+          {/* {error && <Typography color="error">{error}</Typography>} */}
+          {error && (
+            <Typography 
+              color="error" 
+              sx={{ 
+                mt: 2, 
+                mb: 2, 
+                textAlign: 'center',
+                padding: '8px',
+                backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                borderRadius: '4px'
+              }}
+            >
+              {error}
+            </Typography> )}
           <Stepper activeStep={activeStep} alternativeLabel sx={{ margin: '20px 0' }}>
             {steps.map((label) => (
               <Step key={label}>
