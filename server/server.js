@@ -1,7 +1,7 @@
 /**
 * @module server
 * @author Okoyen Ebisine Precious <x17.ebi@icloud.com>
-* @version 1.0.0
+* @version 1.0.1
 * @license MIT
 * @description Main server entry point for Afro-Lyrics-Mania, a web application
 * designed to celebrate African music by providing a platform for music artists to
