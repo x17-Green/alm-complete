@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../Header'; // Import the Header component
+// import Header from '../Header'; // Import the Header component
 
 const BentoWrapper = styled.main`
   display: flex;
@@ -91,7 +91,7 @@ const BentoDashboard = () => {
     <BentoWrapper>
       <BentoContainer>
         <Item1>
-          <Header /> {/* Include the Header component inside Item1 */}
+          {/* <Header /> Include the Header component inside Item1 */}
         </Item1>
         <Item2 />
         <Item3 />

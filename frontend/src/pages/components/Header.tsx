@@ -14,11 +14,13 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { LogoutButton } from '../pages/authPages/LogoutButton'; // Adjust the import path as necessary
-import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
+// import { LogoutButton } from './LogoutButton'; // Adjust the import path as necessary
+// import { useAuth } from '../../hooks/useAuth'; // Import the useAuth hook
+// import { useAuth } from '../../context/AuthContext'; 
+
 
 const Header: React.FC = () => {
-  const { isLoggedIn } = useAuth(); // Get the authentication state
+  // const { isLoggedIn } = useAuth(); // Get the authentication state
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -54,13 +56,13 @@ const Header: React.FC = () => {
           </ListItemButton>
         ))}
         {/* Conditionally render LogoutButton if user is logged in */}
-        {isLoggedIn && (
+        {/* {isLoggedIn && (
           <ListItemButton>
             <ListItemText>
               <LogoutButton />
             </ListItemText>
           </ListItemButton>
-        )}
+        )} */}
       </List>
     </div>
   );
@@ -94,7 +96,7 @@ const Header: React.FC = () => {
               </Button>
             ))}
             {/* Conditionally render LogoutButton in the navigation for larger screens */}
-            {isLoggedIn && <LogoutButton />}
+            {/* {isLoggedIn && <LogoutButton />} */}
           </nav>
         )}
       </Toolbar>

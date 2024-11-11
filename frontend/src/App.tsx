@@ -1,25 +1,22 @@
-// src/App.tsx
-
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider } from './context/AuthContext'; // Import AuthProvider
+import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 import Home from './pages/LandingPages/Home';
 import Features from './pages/LandingPages/Features';
 import About from './pages/LandingPages/About';
 import Contact from './pages/LandingPages/Contact';
-
 import Login from './pages/authPages/Login';
 import Register from './pages/authPages/Register';
 import EmailVerification from './pages/authPages/EmailVerification';
-import DashboardApp from './pages/Dashboard/Dashboard';
+import DashboardApp from './pages/Dashboard/DashboardApp';
 import Logout from './pages/authPages/Logout';
-import { MainLayout } from './components/MainLayout';
-import { DashboardLayout } from './components/DashboardLayout';
+import { MainLayout } from './pages/components/MainLayout';
 
-// Create a custom theme
-const theme = createTheme({
+// Create a custom theme for the main app
+const mainTheme = createTheme({
   palette: {
     primary: {
       main: '#FFA500', // Vibrant orange
@@ -48,37 +45,36 @@ const theme = createTheme({
   },
 });
 
-// Create a functional component to conditionally render headers
-
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Routes>
-          {/* Dashboard route without MainLayout */}
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard/*" element={<DashboardApp />} />
-          </Route>
-          
-          {/* All other routes with MainLayout */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/verify-email" element={<EmailVerification />} />
-            <Route path="/logout" element={<Logout />} />
-          </Route>
-        </Routes>
-      </ThemeProvider>
+      <Routes>
+        {/* Protected Dashboard routes */}
+        <Route
+          path="/dashboard/*"
+          element={
+            <ProtectedRoute>
+              <DashboardApp />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Main app routes */}
+        <Route element={<ThemeProvider theme={mainTheme}><CssBaseline /><MainLayout /></ThemeProvider>}>
+          <Route path="/" element={<Home />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/verify-email" element={<EmailVerification />} />
+          <Route path="/logout" element={<Logout />} />
+        </Route>
+      </Routes>
     </AuthProvider>
   );
 };
 
-// Wrap the App component with Router
 const Root: React.FC = () => (
   <Router>
     <App />

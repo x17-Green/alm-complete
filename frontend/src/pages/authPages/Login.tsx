@@ -62,46 +62,6 @@ export default function Login() {
     return valid;
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   if (!validateInputs()) return; // Validate inputs before proceeding
-
-  //   try {
-  //     const response = await loginUser (loginData); // Call the login API
-  //     console.log('Login successful:', response);
-
-  //     // Check if there is an existing token
-  //     if (response.existingToken) {
-  //       localStorage.setItem('jwtToken', response.existingToken); // Store the existing JWT token
-  //       navigate('/dashboard'); // Redirect to the dashboard
-  //       return; // Exit the function
-  //     }
-
-  //     // Assuming the response contains both tokens, store them in localStorage
-  //     if (response.jwtToken) {
-  //       localStorage.setItem('jwtToken', response.jwtToken); // Store the JWT token in localStorage
-  //     }
-  //     if (response.refreshToken) {
-  //       localStorage.setItem('refreshToken', response.refreshToken); // Store the refresh token in localStorage
-  //     }
-
-  //     navigate('/dashboard'); // Redirect to the dashboard on success
-  //   } catch (error: any) {
-  //     // Log the full error object for debugging
-  //     console.error('Full error object:', error);
-
-  //     // Check if the error response exists and set the error message accordingly
-  //     if (error.response && error.response.data && error.response.data.message) {
-  //       console.log('Error message from server:', error.response.data.message); // Log the error message
-  //       setError(error.response.data.message); // Set the error message from the backend
-  //     } else {
-  //       console.log('Generic error message triggered'); // Log when fallback message is used
-  //       setError('Login failed. Please check your credentials and try again.'); // Fallback error message
-  //     }
-  //     console.error('Login error:', error);
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateInputs()) return;

@@ -18,9 +18,9 @@ const Logout = () => {
       console.log('Logout - Retrieved token:', token); // Debug log
       if (token) {
         try {
-          const response = await logoutUser (token);
+          const response = await logoutUser(token);
+          localStorage.removeItem(token);
           console.log('Logout successful:', response.message);
-          localStorage.removeItem('jwtToken');
           navigate('/login');
         } catch (error) {
           const axiosError = error as AxiosError;
@@ -36,7 +36,7 @@ const Logout = () => {
     handleLogout();
   }, [navigate]);
 
-  return <div>Logging out...</div>; // Optional loading message
+  return <div>Logging out...</div>;
 };
 
 export default Logout;

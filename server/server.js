@@ -51,6 +51,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { config } from 'dotenv';
 import express, { json, urlencoded } from 'express';
+// import { rateLimit } from 'express-rate-limit'; // Disabled rate limiter
 
 /**
 * Required App Modules
@@ -84,6 +85,25 @@ const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://localhost:27017/alm-de
 
 // Load environment variables from .env file
 config();
+
+
+// // <-- Disabled Rate Limiter-->
+// // Configure rate limiter
+// const limiter = rateLimit({
+//   windowMs: 1 * 60 * 1000, // 15 minutes
+//   limit: 2, // Limit each IP to 100 requests per `window` (here 15 minutes)
+//   // standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//   // legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+//   message: 'Too many requests, please try again after 15 minutes'
+//   // handler: (req, res, next) => {
+//   //   return res.status(429).json({
+//   //     status: 'error',
+//   //     message: 'Too many requests, please try again later.',
+//   //   });
+//   // },
+// });
+
+// app.use(limiter);
 
 // Enhanced security with helmet
 app.use(helmet());

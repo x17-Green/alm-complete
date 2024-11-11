@@ -14,11 +14,8 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { LogoutButton } from '../authPages/LogoutButton'; // Adjust the import path as necessary
-import { useAuth } from '../../context/AuthContext'; // Import the useAuth hook
 
 const DashboardHeader: React.FC = () => {
-  const { isLoggedIn } = useAuth(); // Get the authentication state
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -27,7 +24,7 @@ const DashboardHeader: React.FC = () => {
   const navItems = [
     { name: 'Dashboard Home', path: '/dashboard' },
     { name: 'Search', path: '/dashboard/search' },
-    { name: 'Settings', path: '/settings' },
+    { name: 'Settings', path: '/dashboard/settings' },
     { name: 'Logout', path: '/logout' },
   ];
 
@@ -53,14 +50,6 @@ const DashboardHeader: React.FC = () => {
             <ListItemText primary={item.name} />
           </ListItemButton>
         ))}
-        {/* Conditionally render LogoutButton if user is logged in */}
-        {isLoggedIn && (
-          <ListItemButton>
-            <ListItemText>
-              <LogoutButton />
-            </ListItemText>
-          </ListItemButton>
-        )}
       </List>
     </div>
   );
@@ -93,8 +82,6 @@ const DashboardHeader: React.FC = () => {
                 {item.name}
               </Button>
             ))}
-            {/* Conditionally render LogoutButton in the navigation for larger screens */}
-            {isLoggedIn && <LogoutButton />}
           </nav>
         )}
       </Toolbar>

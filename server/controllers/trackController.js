@@ -1,6 +1,6 @@
 import { getTrackInfo, searchTracks as spotifySearchTracks, searchTrack } from '../services/spotifyService.js';
-import Track from '../models/music/Track.js';
-import SearchResult from '../models/music/searchResult.js'; // Import the new model
+import Track from '../models/music/Track';
+import SearchResult from '../models/music/searchResult'; 
 
 // Get all tracks (for testing purposes)
 export const getAllTracks = async (req, res) => {

@@ -1,18 +1,26 @@
-// src/context/AuthContext.tsx
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { loginUser, logoutUser } from '../utils/api';
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-
-// Define the shape of the Auth context
-interface AuthContextType {
-  isLoggedIn: boolean;
-  login: () => void;
-  logout: () => void;
+interface UserData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  fullName: string;
 }
 
-// Create the AuthContext
+interface AuthContextType {
+  isLoggedIn: boolean;
+  user: UserData | null;
+  login: (usernameOrEmail: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  loading: boolean;
+  error: string | null;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Custom hook to use the AuthContext
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -21,23 +29,65 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Method to log in the user
-  const login = () => {
-    setIsLoggedIn(true);
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      setIsLoggedIn(true);
+      // You might want to validate the token here or fetch user data
+    }
+    setLoading(false);
+  }, []);
+
+  const login = async (usernameOrEmail: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await loginUser({ usernameOrEmail, password });
+      if (response.jwtToken) {
+        localStorage.setItem('jwtToken', response.jwtToken);
+      }
+      if (response.refreshToken) {
+        localStorage.setItem('refreshToken', response.refreshToken);
+      }
+      setIsLoggedIn(true);
+      setUser(response.userData || null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setIsLoggedIn(false);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Method to log out the user
-  const logout = () => {
-    setIsLoggedIn(false);
+  const logout = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem('jwtToken');
+      await logoutUser(token);
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
+      setIsLoggedIn(false);
+      setUser(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, loading, error }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export { AuthContext };

@@ -20,7 +20,7 @@ import {
   SelectChangeEvent
 } from '@mui/material';
 import ProfilePictureModal from '../../components/ProfilePictureModal';
-import { registerUser, checkExistingUser } from '../../utils/api';
+import { registerUser, checkNewUser } from '../../utils/api';
 
 interface UserData {
   username: string;
@@ -177,7 +177,7 @@ export default function Register() {
 
   const handleNext = async () => {
     // Check for empty fields before proceeding
-    const { username, email, password, confirmPassword, firstName, lastName, dateOfBirth, country, city, role, spotifyLink, appleMusicLink, bio } = userData;
+    const { username, email, firstName, lastName, dateOfBirth, country, city, role, spotifyLink, appleMusicLink, bio } = userData;
 
     // Check if any required fields are empty
     if (activeStep === 0 && (!username || !email)) {
@@ -202,7 +202,7 @@ export default function Register() {
 
     // Check for existing user before moving to the next step
     try {
-      const existingUserResponse = await checkExistingUser(userData.username, userData.email);
+      const existingUserResponse = await checkNewUser(userData.username, userData.email);
       if (existingUserResponse.status === 409) {
         setError(existingUserResponse.data.message);
         return; // Prevent moving to the next step
