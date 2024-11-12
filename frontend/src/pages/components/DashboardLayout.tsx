@@ -13,7 +13,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       <main className="flex-grow">
         {children}
       </main>
-      <DashboardFooter />
+      {/* <DashboardFooter /> */}
     </div>
   );
 };
